@@ -1,20 +1,28 @@
 const express =  require('express');
 const app = express();
 const request = require('request');
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, '../')));
+app.set('view engine', 'hbs');
+
+function shuffle(array) {
+    array.sort(() => Math.random() - 0.5);
+}  
 
 
 
-const getQuiz = (catNum = "", callback)=>{
-// const getQuiz = ((callback)=>{
+const getQuiz = (catNum = "", (callback)=>{
 
-    const quizURL = `https://opentdb.com/api.php?amount=10&type=multiple`;
 
-    if (typeof catNum == "number"){
-        let catagorySetter = `&category=${catNum}`
-        const quizURL = `https://opentdb.com/api.php?amount=10&type=multiple${catagorySetter}`;
-    } 
+    let quizURL = `https://opentdb.com/api.php?amount=10&type=multiple`;
 
-    request({url: quizURL, json:true}, async (err, response )=> {
+    // if (typeof catNum == "number"){
+    //     let catagorySetter = `&category=${catNum}`
+    //     quizURL = `https://opentdb.com/api.php?amount=10&type=multiple${catagorySetter}`;
+    // } 
+
+    request({url: quizURL, json:true, encoding:null}, async (err, response )=> {
         
         if(err){
 
@@ -22,23 +30,76 @@ const getQuiz = (catNum = "", callback)=>{
             
         }else if(response == undefined){
 
-            callback({
+            await callback({
                 error: "Cannot find this catagory"
             });
         }
         else{
-            
-            callback(response);
+            // console.log(response);
+            await callback(response.body);
        }
       
     })
+})
+
+
+let questionArray = [];
+
+let createQAndAPairs = (data)=> {
+
+    let answerArray = []
+
+    data.results.forEach((element, num) => {
+        answerArray = element.incorrect_answers;
+        answerArray.push(element.correct_answer);
+        answerArray.forEach((e, key) => {
+            answerArray[key] = `<input type="radio" value="${e}" name="question${num}">${e}</input>`;
+        });
+
+        // console.log(answerArray);
+
+
+
+        shuffle(answerArray);
+
+        let object = {
+            question: `<h3>${element.question}</h3>`,
+            answers: answerArray
+        }
+
+        console.log(object);
+
+        questionArray.push(object);
+    });
 }
 
-// {
-//     Question: `<h2>${response.question}</h2>`,
-//     Answers: [`<option class="right">${answer}</option>`,`<option>${answer}</option>`,`<option>${answer}</option>`,`<option>${answer}</option>`]
-// }
 
-getQuiz(2, (response)=>{
-    console.log(response);
+getQuiz((response) => {
+
+    createQAndAPairs(response);
+
+
+    // console.log(questionArray);
+});
+    
+
+
+
+
+
+
+console.log("this is it: ", questionArray.toString());
+
+
+app.get('/index', (req, res) => {
+   
+    res.render('index', {                       
+        data: questionArray
+    })  
+
+});
+
+
+app.listen(3001, ()=> {
+    console.log("Server is running");
 })

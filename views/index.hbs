@@ -7,6 +7,18 @@
     <title>Quiz Time</title>
 </head>
 <body>
-  // {Questions: response } forEach  [all questions from api < forEach all answers >] {{{question.lol}}}
+
+<form>
+    {{#each data}}
+        {{{this.question}}}
+            {{#each this.answers}}
+                {{{this}}}
+            {{/each}}
+    {{/each}}
+
+    <button type="submit">Submit your answers!!</button>
+
+</form>
+  {{!-- {Questions: response } forEach  [all questions from api < forEach all answers >]  --}}
 </body>
 </html>
