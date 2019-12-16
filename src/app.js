@@ -34,6 +34,11 @@ const getQuiz = (catNum = "", callback)=>{
     })
 }
 
+// {
+//     Question: `<h2>${response.question}</h2>`,
+//     Answers: [`<option class="right">${answer}</option>`,`<option>${answer}</option>`,`<option>${answer}</option>`,`<option>${answer}</option>`]
+// }
+
 getQuiz(2, (response)=>{
     console.log(response);
 })
