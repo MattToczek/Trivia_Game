@@ -7,7 +7,7 @@
     <title>Quiz Time</title>
 </head>
 <body>
-
+<nav> <button id='user_name' method="GET" action='/user-page'>{{userName}}</button></nav>
 <form id="questionForm">
     {{#each data}}
         {{{this.question}}}
