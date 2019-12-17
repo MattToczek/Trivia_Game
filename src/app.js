@@ -13,6 +13,7 @@ function shuffle(array) {
 let questionArray = [];
 let correctAnsArray = [];
 
+
 const getQuiz = (catNum = "", (callback)=>{
 
 
@@ -79,6 +80,7 @@ const getAnswers = (data) => {
     data.results.forEach((element) => {
         correctAnsArray.push(element.correct_answer);
     })
+    console.log(correctAnsArray);
 }
 
 
