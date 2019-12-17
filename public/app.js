@@ -1,3 +1,4 @@
+
 let i = 1;
 const radioBtns = document.getElementsByName(`question${i}`);
 console.log(radioBtns.length);
@@ -21,4 +22,5 @@ answerSubmit.addEventListener("click" , () => {
     getUserAnswers()
     }
 );
+
 
