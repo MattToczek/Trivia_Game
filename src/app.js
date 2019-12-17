@@ -39,6 +39,7 @@ let userAnswers;
 let data;
 
 
+
 const getQuiz = (catNum = "", (callback)=>{
 
 
@@ -104,6 +105,7 @@ const getAnswers = (data) => {
     data.results.forEach((element) => {
         correctAnsArray.push(element.correct_answer);
     })
+    console.log(correctAnsArray);
 }
 
 
