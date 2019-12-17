@@ -1,5 +1,6 @@
-const express =  require('express');
+const express = require("express");
 const app = express();
+
 const request = require('request');
 const path = require('path');
 const mysql = require('mysql')
@@ -103,7 +104,9 @@ const getAnswers = (data) => {
 }
 
 
+
 getQuiz( response => {
+
 
     createQAndAPairs(response);
     getAnswers(response);
@@ -132,3 +135,4 @@ app.get('/index', (req, res) => {
 app.listen(3001, ()=> {
     console.log("Server is running");
 })
+
