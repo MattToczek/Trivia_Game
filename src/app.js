@@ -34,6 +34,8 @@ function shuffle(array) {
 let questionArray = [];
 let correctAnsArray = [];
 let score = 0;
+let userAnswers;
+let data;
 
 const getQuiz = (catNum = "", (callback)=>{
 
@@ -71,11 +73,13 @@ let createQAndAPairs = (data)=> {
     let answerArray = []
 
     data.results.forEach((element, num) => {
+        let correctA = `<input type="radio" value="${element.correct_answer}" class="inputBtns correct" name="question${num+1}">${element.correct_answer}</input>`
         answerArray = element.incorrect_answers;
-        answerArray.push(element.correct_answer);
         answerArray.forEach((e, key) => {
             answerArray[key] = `<input type="radio" value="${e}" class="inputBtns" name="question${num+1}">${e}</input>`;
         });
+
+        answerArray.push(correctA);
 
         // console.log(answerArray);
 
@@ -88,7 +92,7 @@ let createQAndAPairs = (data)=> {
             answers: answerArray
         }
 
-        console.log(object);
+        // console.log(object);
 
         questionArray.push(object);
     });
@@ -105,8 +109,13 @@ const getAnswers = (data) => {
 
 getQuiz( response => {
 
-    createQAndAPairs(response);
-    getAnswers(response);
+    data = response;
+
+    console.log(response);
+
+    
+    createQAndAPairs(data);
+    getAnswers(data);
 
     // console.log(questionArray);
 });
@@ -115,18 +124,27 @@ getQuiz( response => {
 
 
 app.post('/index', (req, res) => {
-    let userAnswers = Object.values(req.body);
+    userAnswers = Object.values(req.body);
     userAnswers.forEach(element => {
         if (correctAnsArray.includes(element)) {
             score ++
-        }
-    });
-    console.log(score);
+         }
+    })
+
+    res.render('scoreRead', {
+        score: score,
+        data: questionArray
+
+    })
+
+    score=0;
+    
+    // console.log(score);
     
 })
 
 
-console.log("this is it: ", questionArray.toString());
+// console.log("this is it: ", questionArray.toString());
 
 
 app.get('/index', (req, res) => {
