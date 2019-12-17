@@ -38,6 +38,7 @@ let score = 0;
 let userAnswers;
 let data;
 
+
 const getQuiz = (catNum = "", (callback)=>{
 
 
@@ -139,6 +140,7 @@ app.post('/index', (req, res) => {
     score=0;
     
     // console.log(score);
+
     
 })
 
