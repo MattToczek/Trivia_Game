@@ -17,7 +17,7 @@ const db = mysql.createConnection({         // info in 'session' tab
     user: 'root',
     password: 'password',
     port: 3306,             //mySQL port
-    database: 'users_db'
+    database: 'scoreLog'
 });
 
 db.connect((err) => {
@@ -125,7 +125,7 @@ getQuiz( response => {
 
 
 
-app.post('/index', (req, res) => {
+app.post('/scoreRead', (req, res) => {
     userAnswers = Object.values(req.body);
     userAnswers.forEach(element => {
         if (correctAnsArray.includes(element)) {
@@ -159,20 +159,18 @@ app.get('/index', (req, res) => {
 });
 
 
-app.listen(3001, ()=> {
-    console.log("Server is running");
-});
+
 
 app.get('/', (request, response) => {
     response.render('login')
 }); 
 
-app.post('/', (request, response) => {
+app.post('/index', (request, response) => {
     const userName = request.body.theUserName; 
     const password = request.body.thePassword;
-    let sqlCheck = 'SELECT user_name, user_password FROM users WHERE user_name = ?'
+    let sqlCheck = 'SELECT user_name, user_password FROM users WHERE user_name = ?';
 
-    let checkCredentials = db.query(sqlCheck, userName, (error, result) => {
+    db.query(sqlCheck, userName, (error, result) => {
         if(error) {
             console.log('[INFO] Error')
             console.log(error) 
@@ -193,7 +191,7 @@ app.get('/register', (request, response) => {
     response.render('register')
 });
 
-app.post('/register', (request, response) => {
+app.post('/sucessfulSignUp', (request, response) => {
     const userName = request.body.regUsername; 
     const password = request.body.regPassword; 
     const email = request.body.regEmail; 
@@ -202,25 +200,25 @@ app.post('/register', (request, response) => {
     let signUp = 'INSERT INTO users SET user_name = ?, email = ?, user_password = ?';
     let newUser = [userName, email, password];
 
-    let registerUser = db.query(sqlEmailCheck, email, (error, result) => { 
+    db.query(sqlEmailCheck, email, (error, result) => { 
         if(error){
             console.log('[INFO] ERROR');
             console.log(error);
         } else if(result.length > 0){
             // Render "this email has been taken"
         } else{
-            let query = db.query(sqlUserNameCheck, userName, (error, result) => {
+            db.query(sqlUserNameCheck, userName, (error, result) => {
                 if(error){
                     console.log('[INFO] ERROR'); 
                     console.log(error)
                 } else if(result.length > 0){
                     // Render "this user name has been taken!"
                 } else {
-                    let register = db.query(signUp, newUser, (error, result) => {
+                    db.query(signUp, newUser, (error, result) => {
                         if(error){
                             console.log('[INFO] Error')
                         } else {  
-                            response.render('index', {                       
+                            response.render('login', {                       
                                 data: questionArray
                             })  
                         }
@@ -229,4 +227,9 @@ app.post('/register', (request, response) => {
             })
         }
     })
+});
+
+
+app.listen(3001, ()=> {
+    console.log("Server is running");
 });

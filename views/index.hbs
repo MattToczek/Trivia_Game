@@ -9,7 +9,7 @@
 <body>
 
 <nav> <button id='user_name' method="GET" action='/user-page'>{{userName}}</button></nav>
-<form id="questionForm" method="POST">
+<form id="questionForm" method="POST" action="/scoreRead">
 
     {{#each data}}
         {{{this.question}}}
@@ -18,7 +18,7 @@
             {{/each}}
     {{/each}}
 
-    <a id="answerSubmit" href="#">Submit your answers!!</a>
+    <button id="answerSubmit">Submit your answers!!</button>
 
 </form>
   {{!-- {Questions: response } forEach  [all questions from api < forEach all answers >]  --}}

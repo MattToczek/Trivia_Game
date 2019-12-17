@@ -17,10 +17,10 @@ getUserAnswers = () => {
     console.log(userAnswers);
 };
 
-answerSubmit.addEventListener("click" , () => {
-    console.log("Button Clicked");
-    getUserAnswers()
-    }
-);
+// answerSubmit.addEventListener("click" , () => {
+//     console.log("Button Clicked");
+//     getUserAnswers()
+//     }
+// );
 
 
