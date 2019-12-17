@@ -17,7 +17,7 @@ const db = mysql.createConnection({         // info in 'session' tab
     user: 'root',
     password: 'password',
     port: 3306,             //mySQL port
-    database: 'scoreLog'
+    database: 'users_db'
 });
 
 db.connect((err) => {
@@ -134,5 +134,72 @@ app.get('/index', (req, res) => {
 
 app.listen(3001, ()=> {
     console.log("Server is running");
-})
+});
 
+app.get('/', (request, response) => {
+    response.render('login')
+}); 
+
+app.post('/', (request, response) => {
+    const userName = request.body.theUserName; 
+    const password = request.body.thePassword;
+    let sqlCheck = 'SELECT user_name, user_password FROM users WHERE user_name = ?'
+
+    let checkCredentials = db.query(sqlCheck, userName, (error, result) => {
+        if(error) {
+            console.log('[INFO] Error')
+            console.log(error) 
+        } else {
+            if(result.length < 1){
+               response.render('errorLogin') 
+            } else {
+                response.render('index', {                       
+                    data: questionArray, 
+                    userName: userName
+                }) 
+            }
+        }
+    })  
+});  
+
+app.get('/register', (request, response) => {
+    response.render('register')
+});
+
+app.post('/register', (request, response) => {
+    const userName = request.body.regUsername; 
+    const password = request.body.regPassword; 
+    const email = request.body.regEmail; 
+    let sqlEmailCheck = 'SELECT email FROM users WHERE email = ?'; 
+    let sqlUserNameCheck = 'SELECT user_name FROM users WHERE user_name = ?';
+    let signUp = 'INSERT INTO users SET user_name = ?, email = ?, user_password = ?';
+    let newUser = [userName, email, password];
+
+    let registerUser = db.query(sqlEmailCheck, email, (error, result) => { 
+        if(error){
+            console.log('[INFO] ERROR');
+            console.log(error);
+        } else if(result.length > 0){
+            // Render "this email has been taken"
+        } else{
+            let query = db.query(sqlUserNameCheck, userName, (error, result) => {
+                if(error){
+                    console.log('[INFO] ERROR'); 
+                    console.log(error)
+                } else if(result.length > 0){
+                    // Render "this user name has been taken!"
+                } else {
+                    let register = db.query(signUp, newUser, (error, result) => {
+                        if(error){
+                            console.log('[INFO] Error')
+                        } else {  
+                            response.render('index', {                       
+                                data: questionArray
+                            })  
+                        }
+                    })
+                }
+            })
+        }
+    })
+});
