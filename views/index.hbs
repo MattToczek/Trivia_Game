@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<form>
+<form id="questionForm">
     {{#each data}}
         {{{this.question}}}
             {{#each this.answers}}
@@ -20,5 +20,6 @@
 
 </form>
   {{!-- {Questions: response } forEach  [all questions from api < forEach all answers >]  --}}
+  <script src="/public/app.js"></script>
 </body>
 </html>

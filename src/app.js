@@ -10,15 +10,17 @@ function shuffle(array) {
     array.sort(() => Math.random() - 0.5);
 }  
 
-
+let questionArray = [];
+let correctAnsArray = [];
 
 const getQuiz = (catNum = "", (callback)=>{
 
 
     let quizURL = `https://opentdb.com/api.php?amount=10&type=multiple`;
+    let catagorySetter = `&category=${catNum}`
 
     // if (typeof catNum == "number"){
-    //     let catagorySetter = `&category=${catNum}`
+        
     //     quizURL = `https://opentdb.com/api.php?amount=10&type=multiple${catagorySetter}`;
     // } 
 
@@ -43,7 +45,7 @@ const getQuiz = (catNum = "", (callback)=>{
 })
 
 
-let questionArray = [];
+
 
 let createQAndAPairs = (data)=> {
 
@@ -53,7 +55,7 @@ let createQAndAPairs = (data)=> {
         answerArray = element.incorrect_answers;
         answerArray.push(element.correct_answer);
         answerArray.forEach((e, key) => {
-            answerArray[key] = `<input type="radio" value="${e}" name="question${num}">${e}</input>`;
+            answerArray[key] = `<input type="radio" value="${e}" class="inputBtns" name="question${num+1}">${e}</input>`;
         });
 
         // console.log(answerArray);
@@ -63,7 +65,7 @@ let createQAndAPairs = (data)=> {
         shuffle(answerArray);
 
         let object = {
-            question: `<h3>${element.question}</h3>`,
+            question: `<label for="question${num+1}"><h3>${element.question}</h3></label>`,
             answers: answerArray
         }
 
@@ -73,11 +75,17 @@ let createQAndAPairs = (data)=> {
     });
 }
 
+const getAnswers = (data) => {
+    data.results.forEach((element) => {
+        correctAnsArray.push(element.correct_answer);
+    })
+}
+
 
 getQuiz((response) => {
 
     createQAndAPairs(response);
-
+    getAnswers(response);
 
     // console.log(questionArray);
 });
