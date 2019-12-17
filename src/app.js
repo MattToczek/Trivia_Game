@@ -1,44 +1,37 @@
-const express =  require('express');
+const express = require("express");
 const app = express();
-const request = require('request');
+const request = require("request");
 
+const test = "this is a test";
 
+const getQuiz = (catNum = "", callback) => {
+  // const getQuiz = ((callback)=>{
 
-const getQuiz = (catNum = "", callback)=>{
-// const getQuiz = ((callback)=>{
+  const quizURL = `https://opentdb.com/api.php?amount=10&type=multiple`;
 
-    const quizURL = `https://opentdb.com/api.php?amount=10&type=multiple`;
+  if (typeof catNum == "number") {
+    let catagorySetter = `&category=${catNum}`;
+    const quizURL = `https://opentdb.com/api.php?amount=10&type=multiple${catagorySetter}`;
+  }
 
-    if (typeof catNum == "number"){
-        let catagorySetter = `&category=${catNum}`
-        const quizURL = `https://opentdb.com/api.php?amount=10&type=multiple${catagorySetter}`;
-    } 
-
-    request({url: quizURL, json:true}, async (err, response )=> {
-        
-        if(err){
-
-            console.log("ERROR: Cannot connect to API");
-            
-        }else if(response == undefined){
-
-            callback({
-                error: "Cannot find this catagory"
-            });
-        }
-        else{
-            
-            callback(response);
-       }
-      
-    })
-}
+  request({ url: quizURL, json: true }, async (err, response) => {
+    if (err) {
+      console.log("ERROR: Cannot connect to API");
+    } else if (response == undefined) {
+      callback({
+        error: "Cannot find this catagory"
+      });
+    } else {
+      callback(response);
+    }
+  });
+};
 
 // {
 //     Question: `<h2>${response.question}</h2>`,
 //     Answers: [`<option class="right">${answer}</option>`,`<option>${answer}</option>`,`<option>${answer}</option>`,`<option>${answer}</option>`]
 // }
 
-getQuiz(2, (response)=>{
-    console.log(response);
-})
+getQuiz(2, response => {
+  console.log(response);
+});
