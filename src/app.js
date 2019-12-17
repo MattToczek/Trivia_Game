@@ -2,9 +2,30 @@ const express =  require('express');
 const app = express();
 const request = require('request');
 const path = require('path');
+const mysql = require('mysql')
 
 app.use(express.static(path.join(__dirname, '../')));
+
+app.use(express.urlencoded());
+app.use(express.json());
+
 app.set('view engine', 'hbs');
+
+const db = mysql.createConnection({         // info in 'session' tab
+    host:'127.0.0.1',                       // in Workbench
+    user: 'root',
+    password: 'password',
+    port: 3306,             //mySQL port
+    database: 'scoreLog'
+});
+
+db.connect((err) => {
+    if(err) {
+        console.log(err); 
+    } else{
+        console.log('MySQLBlog Connected');  
+    }
+})
 
 function shuffle(array) {
     array.sort(() => Math.random() - 0.5);
@@ -82,7 +103,7 @@ const getAnswers = (data) => {
 }
 
 
-getQuiz((response) => {
+getQuiz( response => {
 
     createQAndAPairs(response);
     getAnswers(response);
