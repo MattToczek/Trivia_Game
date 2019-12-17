@@ -8,7 +8,9 @@
 </head>
 <body>
 
+<nav> <button id='user_name' method="GET" action='/user-page'>{{userName}}</button></nav>
 <form id="questionForm" method="POST">
+
     {{#each data}}
         {{{this.question}}}
             {{#each this.answers}}
