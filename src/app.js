@@ -34,12 +34,13 @@ function shuffle(array) {
 
 let questionArray = [];
 let correctAnsArray = [];
+let score = 0;
 
 const getQuiz = (catNum = "", (callback)=>{
 
 
     let quizURL = `https://opentdb.com/api.php?amount=10&type=multiple`;
-    let catagorySetter = `&category=${catNum}`
+    // let catagorySetter = `&category=${catNum}`
 
     // if (typeof catNum == "number"){
         
@@ -65,9 +66,6 @@ const getQuiz = (catNum = "", (callback)=>{
       
     })
 })
-
-
-
 
 let createQAndAPairs = (data)=> {
 
@@ -104,7 +102,6 @@ const getAnswers = (data) => {
 }
 
 
-
 getQuiz( response => {
 
 
@@ -117,7 +114,16 @@ getQuiz( response => {
 
 
 
-
+app.post('/index', (req, res) => {
+    let userAnswers = Object.values(req.body);
+    userAnswers.forEach(element => {
+        if (correctAnsArray.includes(element)) {
+            score ++
+        }
+    });
+    console.log(score);
+    
+})
 
 
 console.log("this is it: ", questionArray.toString());
