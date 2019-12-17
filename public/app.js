@@ -1,2 +1,2 @@
-const radioBtns = document.getElementsByClass('inputBtns');
+const radioBtns = document.getElementsByClassName('inputBtns');
 
