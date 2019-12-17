@@ -12,6 +12,7 @@ app.use(express.json());
 
 app.set('view engine', 'hbs');
 
+
 const db = mysql.createConnection({         // info in 'session' tab
     host:'127.0.0.1',                       // in Workbench
     user: 'root',
@@ -29,8 +30,8 @@ db.connect((err) => {
 })
 
 function shuffle(array) {
-    array.sort(() => Math.random() - 0.5);
-}  
+  array.sort(() => Math.random() - 0.5);
+}
 
 let questionArray = [];
 let correctAnsArray = [];
@@ -40,10 +41,11 @@ let data;
 
 
 
-const getQuiz = (catNum = "", (callback)=>{
-
-
+const getQuiz =
+  ((catNum = ""),
+  callback => {
     let quizURL = `https://opentdb.com/api.php?amount=10&type=multiple`;
+
     // let catagorySetter = `&category=${catNum}`
 
     // if (typeof catNum == "number"){
@@ -87,19 +89,29 @@ let createQAndAPairs = (data)=> {
         // console.log(answerArray);
 
 
+    //     quizURL = `https://opentdb.com/api.php?amount=10&type=multiple${catagorySetter}`;
+    // }
 
-        shuffle(answerArray);
-
-        let object = {
-            question: `<label for="question${num+1}"><h3>${element.question}</h3></label>`,
-            answers: answerArray
+    request(
+      { url: quizURL, json: true, encoding: null },
+      async (err, response) => {
+        if (err) {
+          console.log("ERROR: Cannot connect to API");
+        } else if (response == undefined) {
+          await callback({
+            error: "Cannot find this catagory"
+          });
+        } else {
+          // console.log(response);
+          await callback(response.body);
         }
+
 
         // console.log(object);
 
         questionArray.push(object);
     });
-}
+
 
 const getAnswers = (data) => {
     data.results.forEach((element) => {
@@ -107,6 +119,9 @@ const getAnswers = (data) => {
     })
     console.log(correctAnsArray);
 }
+
+
+    shuffle(answerArray);
 
 
 getQuiz( response => {
@@ -123,6 +138,11 @@ getQuiz( response => {
 });
     
 
+    console.log(object);
+
+    questionArray.push(object);
+  });
+};
 
 
 app.post('/scoreRead', (req, res) => {
@@ -147,16 +167,18 @@ app.post('/scoreRead', (req, res) => {
 })
 
 
+  // console.log(questionArray);
+});
+
 // console.log("this is it: ", questionArray.toString());
 
-
-app.get('/index', (req, res) => {
-   
-    res.render('index', {                       
-        data: questionArray
-    })  
-
+app.get("/index", (req, res) => {
+  res.render("index", {
+    data: questionArray
+  });
 });
+
+
 
 
 
@@ -233,3 +255,4 @@ app.post('/sucessfulSignUp', (request, response) => {
 app.listen(3001, ()=> {
     console.log("Server is running");
 });
+
