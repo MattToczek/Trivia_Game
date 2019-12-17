@@ -1,27 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Quiz Time</title>
+
+    <link rel="stylesheet" href="src/style.css" <title>Quiz Time</title>
 </head>
+
 <body>
+    <div class="bodyWrapper">
+        <h1>TRIVIA GAME</h1>
+        <div>
+            <nav> <button id='user_name' method="GET" action='/user-page'>{{userName}}</button></nav>
+            <form id="questionForm" method="POST" action="/scoreRead">  
+                <ol>
+                    {{#each data}}
 
-<nav> <button id='user_name' method="GET" action='/user-page'>{{userName}}</button></nav>
-<form id="questionForm" method="POST" action="/scoreRead">
+                        <div class="questionBox">
+                            <li>
+                                {{{this.question}}}
+                                {{#each this.answers}}
+                                     {{{this}}}
+                                {{/each}}
+                            </li>
+                        </div>
 
-    {{#each data}}
-        {{{this.question}}}
-            {{#each this.answers}}
-                {{{this}}}
-            {{/each}}
-    {{/each}}
+                    {{/each}}
 
-    <button id="answerSubmit">Submit your answers!!</button>
+                </ol>
 
-</form>
-  {{!-- {Questions: response } forEach  [all questions from api < forEach all answers >]  --}}
-  <script src="/public/app.js"></script>
+                <button type="submit">Submit your answers!!</button>
+
+            </form>
+
+        </div>
+        <script src="/public/app.js"></script>
 </body>
+
 </html>
