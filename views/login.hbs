@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+    <link rel="stylesheet" href="/public/stylesheets/home.css">
+    <title>George's Place</title>
+</head>
+<body id="main">
+    <h1>Trivial Pursuit!</h1> 
+    <h2>Login:</h2>
+    <form method="POST" action="/index">
+        <input name="theUserName" placeholder="Username"><br>
+        <input name="thePassword" placeholder="Password"><br>
+        <button type="submit">Login</button>
+    </form>
+    <form method="GET" action="/register">
+        <button type="submit">Don't have an account? Register here</button>
+    </form>
+</body>
+</html>

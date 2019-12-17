@@ -13,28 +13,28 @@
     <div class="bodyWrapper">
         <h1>TRIVIA GAME</h1>
         <div>
-            <form id="questionForm">
+            <nav> <button id='user_name' method="GET" action='/user-page'>{{userName}}</button></nav>
+            <form id="questionForm" method="POST" action="/scoreRead">  
                 <ol>
                     {{#each data}}
 
-                    <div class="questionBox">
-                        <li>
-                            {{{this.question}}}
-                            {{#each this.answers}}
-                            {{{this}}}
-                            {{/each}}
-                        </li>
-                    </div>
+                        <div class="questionBox">
+                            <li>
+                                {{{this.question}}}
+                                {{#each this.answers}}
+                                     {{{this}}}
+                                {{/each}}
+                            </li>
+                        </div>
 
                     {{/each}}
 
                 </ol>
 
-
-                {{!-- <button type="submit">Submit your answers!!</button> --}}
+                <button type="submit">Submit your answers!!</button>
 
             </form>
-            {{!-- {Questions: response } forEach  [all questions from api < forEach all answers >]  --}}
+
         </div>
         <script src="/public/app.js"></script>
 </body>
