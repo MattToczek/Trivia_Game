@@ -199,7 +199,7 @@ app.get('/highscore', (req, res) => {
                 position++;
             })
              
-            res.render('highscore', {
+            res.render('highScores', {
                 scores: sortedScores
             })
         })
@@ -282,6 +282,36 @@ app.get('/auth', (req, res) => {
  
 });
 
+app.get("/highscore", (req, res) => {
+    res.render("highscore", {});
+  });
+  
+  app.get("/", (request, response) => {
+    response.render("login");
+  });
+  
+  app.post("/index", (request, response) => {
+    const userName = request.body.theUserName;
+    const password = request.body.thePassword;
+    let sqlCheck =
+      "SELECT user_name, user_password FROM users WHERE user_name = ?";
+  
+    db.query(sqlCheck, userName, (error, result) => {
+      if (error) {
+        console.log("[INFO] Error");
+        console.log(error);
+      } else {
+        if (result.length < 1) {
+          response.render("errorLogin");
+        } else {
+          response.render("index", {
+            data: questionArray,
+            userName: userName
+          });
+        }
+      }
+    });
+  });
 
 
 
@@ -342,7 +372,7 @@ app.get('/register', (request, response) => {
     response.render('register')
 });
 
-app.post('/sucessfulSignUp', (request, response) => {
+app.post('/successfulSignUp', (request, response) => {
     const userName = request.body.regUsername; 
     const password = request.body.regPassword; 
     const email = request.body.regEmail; 
