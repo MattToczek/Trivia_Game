@@ -1,0 +1,67 @@
+@import url("https://fonts.google.com/specimen/Pinyon+Script?selection.family=Pinyon+Script&display=swap");
+
+* {
+  box-sizing: border-box;
+
+}
+
+.column {
+  float: center;
+  width: 33.33%;
+  height: 600px;
+
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+body {
+  background-image: url("https://trello-attachments.s3.amazonaws.com/5df3aa138de51873ffc86aed/5df90f2701d3b43a56b0d340/4379d7dc6563a287250ba2e515700c66/question-background.png");
+  background-size: 100% 100%;
+  background-position: center;
+  overflow: hidden;
+}
+
+
+h1 {
+  text-align: center;
+  text-decoration: underline;
+  font-family: "Pinyon Script", cursive;
+  font-size: 60px;
+  color: goldenrod;
+}
+
+h2 {
+  text-decoration: underline;
+}
+
+h2, td {
+  text-decoration: underline;
+  column-count: 3;
+  column-gap: 30px;
+  column-rule-style: solid;
+  font-family: "Pinyon Script", cursive;
+  font-size: 30px;
+  color: goldenrod;
+}
+.highscore {
+  display: flex;
+  justify-content: center;
+}
+/* .left,
+.right {
+  width: 33%; */
+/* } */
+.middle {
+  width: 33%;
+}
+
+table {
+  max-width: 90vw;
+  background-color: rgba(0, 0, 0, 0.424);
+  border-radius: 50px;
+  padding: 30px;
+}

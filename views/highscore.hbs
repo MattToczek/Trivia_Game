@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/src/scorestyle.css">
+    <title>Highscore</title>
+
+</head>
+
+<h1>HIGHSCORE</h1>
+
+
+<div class="highscore">
+    <table>
+        <tr>
+            {{!-- <h2><ont-family: "Pinyon Script", cursive; --}}
+            <th>
+                <h2>POSITION</h2>
+            </th>
+            <th>
+                <h2>NAME</h2>
+            </th>
+            <th>
+                <h2>SCORE</h2>
+
+            </th>
+
+            {{#each scores}}
+        <tr>
+            <td>{{this.position}}</td>
+            <td>{{this.user_name}}</td>
+            <td>{{this.score}}</td>
+        </tr>
+        {{/each}}
+        </tr>
+
+    </table>
+</div>
+
+
+<style>
+
+</style>
+
+</html>
