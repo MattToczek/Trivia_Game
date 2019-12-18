@@ -6,9 +6,10 @@
   "dependencies": {
     "express": "^4.17.1",
     "hbs": "^4.0.6",
+    "mysql": "^2.17.1",
+    "path": "^0.12.7",
     "request": "^2.88.0",
-    "require": "^2.4.20",
-    "mysql": "^2.17.1"
+    "require": "^2.4.20"
   },
   "devDependencies": {},
   "scripts": {
