@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css?family=Pinyon+Script&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Raleway:500&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    /* background: linear-gradient(#ecf0f1, #9b59b6); */
+    background-image: url("/img/question-background.png");
+    background-size: 100% 100%;
+    background-position: center;
+    overflow: hidden;
+
+}
+
+#loginPageLogo {
+    margin: 50px;
+    padding: 20px 0px;
+    font-size: 100px;
+    font-family: 'Pinyon Script', cursive;
+    text-shadow: rgb(63, 113, 133) 10px 5px 6px;
+    text-align: center;
+    color: goldenrod;
+    border: solid goldenrod;
+    box-shadow: rgb(63, 113, 133) 10px 5px 6px;
+    background-color: rgb(46, 90, 107);
+}
+
+#loginForm, h2{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap-reverse;
+    align-items: center;
+    font-family: 'Raleway', sans-serif;
+    font-size: 30px;
+}
+
+
+h2 {
+    color: goldenrod;
+    margin-top: 7%;
+    margin-bottom: 5%;
+}
+
+button, a {
+    display: inline-block;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    text-decoration: none;
+    background: rgb(63, 113, 133);
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background 250ms ease-in-out, 
+                transform 150ms ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+button:hover,
+button:focus, a:hover, a:focus {
+    background: goldenrod;
+}
+
+button:focus, a:focus
+ {
+    outline: 1px solid goldenrod;
+    outline-offset: -4px;
+}
+
+button:active, a:active {
+    transform: scale(0.99);
+}
+
+/* Full-width inputs */
+input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
