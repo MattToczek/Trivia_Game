@@ -8,9 +8,9 @@
     <title>Results</title>
 </head>
 <body>
-
+<div class="bodyWrapper">
 <h1>You Scored: {{score}}!!!</h1>
-<div>
+<div class="scoreReadDiv">
     {{#each data}}
         {{{this.question}}}
             {{#each this.answers}}
@@ -18,6 +18,7 @@
             {{/each}}
     {{/each}}
 </div>   
+</div>
 
   {{!-- {Questions: response } forEach  [all questions from api < forEach all answers >]  --}}
 

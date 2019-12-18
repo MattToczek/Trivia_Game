@@ -1,12 +1,17 @@
 const express = require("express");
 const app = express();
-
+const session = require('express-session')
 const request = require('request');
 const path = require('path');
 const mysql = require('mysql')
 
 app.use(express.static(path.join(__dirname, '../')));
 
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
 app.use(express.urlencoded());
 app.use(express.json());
 
@@ -123,69 +128,133 @@ getQuiz( response => {
 });
     
 
+app.get('/scoreRead', (req, res) => {
+    
+    if (req.session.loggedin) {
+        
 
+        res.render('scoreRead', {
+            score: score,
+            data: questionArray
+
+        })
+
+    } else {
+		res.send('Please login to view this page!');
+	}
+	// response.end();
+})
 
 app.post('/scoreRead', (req, res) => {
-    userAnswers = Object.values(req.body);
-    userAnswers.forEach(element => {
-        if (correctAnsArray.includes(element)) {
-            score ++
-         }
-    })
-
-    res.render('scoreRead', {
-        score: score,
-        data: questionArray
-
-    })
-
-    score=0;
     
-    // console.log(score);
+    if (req.session.loggedin) {
+        userAnswers = Object.values(req.body);
+        userAnswers.forEach(element => {
+            if (correctAnsArray.includes(element)) {
+                score ++
+            }
+        })
 
-    
+        res.render('scoreRead', {
+            score: score,
+            data: questionArray
+
+        })
+
+        score=0;
+    } else {
+		res.send('Please login to view this page!');
+	}
+	// response.end();
 })
 
 
-// console.log("this is it: ", questionArray.toString());
-
+// console.log("this is it: ", questionArray.toString());ß
 
 app.get('/index', (req, res) => {
-   
-    res.render('index', {                       
-        data: questionArray
-    })  
+    if (req.session.loggedin) { 
 
+        res.render('index', {
+            userName: req.body.theUserName,
+            data: questionArray
+
+        })
+
+    
+    } else {
+        res.send('Please login to view this page!');
+    }
+
+
+});
+
+app.get('/auth', (req, res) => {
+    if (req.session.loggedin) { 
+    
+        res.render('auth')
+
+    } else {
+        res.send('Please login to view this page!');
+    }
+
+ 
 });
 
 
 
 
 app.get('/', (request, response) => {
+    
     response.render('login')
 }); 
 
-app.post('/index', (request, response) => {
-    const userName = request.body.theUserName; 
-    const password = request.body.thePassword;
-    let sqlCheck = 'SELECT user_name, user_password FROM users WHERE user_name = ?';
+app.post('/auth', function(request, response) {
+    console.log(request.body);
+    
+    var username = request.body.theUserName;
+    console.log(username);
+    
+    var password = request.body.thePassword;
+    console.log(password);
 
-    db.query(sqlCheck, userName, (error, result) => {
-        if(error) {
-            console.log('[INFO] Error')
-            console.log(error) 
-        } else {
-            if(result.length < 1){
-               response.render('errorLogin') 
-            } else {
-                response.render('index', {                       
-                    data: questionArray, 
-                    userName: userName
-                }) 
-            }
-        }
-    })  
-});  
+	if (username && password) {
+		db.query('SELECT * FROM users WHERE user_name = ? AND user_password = ?', [username, password], function(error, results, fields) {
+			if (results.length > 0) {
+				request.session.loggedin = true;
+				request.session.username = username;
+                response.redirect('/index'); 
+			} else {
+				response.redirect('auth') 
+			}			
+			response.end();
+		});
+	} else {
+        response.redirect('auth') 		
+		response.end();
+	}
+});
+
+// app.post('/index', (request, response) => {
+//     const userName = request.body.theUserName; 
+//     const password = request.body.thePassword;
+//     let sqlCheck = 'SELECT user_name, user_password FROM users WHERE user_name = ?';
+
+//     db.query(sqlCheck, userName, (error, result) => {
+//         if(error) {
+//             console.log('[INFO] Error')
+//             console.log(error) 
+//         } else {
+//             if(result.length < 1){
+//                response.render('errorLogin') 
+//             } else {
+//                 response.render('index', {                       
+//                     data: questionArray, 
+//                     userName: userName
+//                 }) 
+//             }
+//         }
+//     })  
+// });  
 
 app.get('/register', (request, response) => {
     response.render('register')
