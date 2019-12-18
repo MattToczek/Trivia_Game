@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
-    <link rel="stylesheet" href="/src/style.css">
-    <title>George's Place</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./src/login.css">
+    <title>Quadrivial Dispute</title>
 </head>
+
 <body id="main">
-    <h1>Trivial Pursuit!</h1> 
-    <h2>Login:</h2>
-    <form method="POST" action="/index">
-        <input name="theUserName" placeholder="Username"><br>
-        <input name="thePassword" placeholder="Password"><br>
-        <button type="submit">Login</button>
-    </form>
-    <form method="GET" action="/register">
-        <button type="submit">Don't have an account? Register here</button>
-    </form>
+    <h1 id="loginPageLogo">Quadrivial Dispute</h1>
+    <h2>Please login or register.</h2>
+    <div id="loginForm">
+        <form method="POST" action="/">
+            <input name="theUserName" placeholder="Username"><br>
+            <input name="thePassword" placeholder="Password"><br>
+            <button type="submit">Login</button>
+            <a href="/register">Register</a>
+        </form>
+        {{!-- <form method="GET" action="/register">
+            <button type="submit"> Register</button>
+        </form> --}}
+    </div>
 </body>
+
 </html>
