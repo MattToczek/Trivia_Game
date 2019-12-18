@@ -1,12 +1,18 @@
 const express = require("express");
 const app = express();
+const session = require('express-session')
+const request = require('request');
+const path = require('path');
+const mysql = require('mysql')
 
-const request = require("request");
-const path = require("path");
-const mysql = require("mysql");
 
 app.use(express.static(path.join(__dirname, "../")));
 
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
 app.use(express.urlencoded());
 app.use(express.json());
 
@@ -110,41 +116,81 @@ const getAnswers = data => {
   console.log(correctAnsArray);
 };
 
-getQuiz(response => {
-  data = response;
 
-  //console.log(response);
+app.get('/scoreRead', (req, res) => {
+    
+    if (req.session.loggedin) {
+        
 
-  createQAndAPairs(data);
-  getAnswers(data);
+        res.render('scoreRead', {
+            score: score,
+            data: questionArray
 
-  // console.log(questionArray);
-});
+        })
 
-app.post("/scoreRead", (req, res) => {
-  userAnswers = Object.values(req.body);
-  userAnswers.forEach(element => {
-    if (correctAnsArray.includes(element)) {
-      score++;
+    } else {
+		res.send('Please login to view this page!');
+	}
+	// response.end();
+})
+
+app.post('/scoreRead', (req, res) => {
+    
+    if (req.session.loggedin) {
+        userAnswers = Object.values(req.body);
+        userAnswers.forEach(element => {
+            if (correctAnsArray.includes(element)) {
+                score ++
+            }
+        })
+
+        res.render('scoreRead', {
+            score: score,
+            data: questionArray
+
+        })
+
+        score=0;
+    } else {
+		res.send('Please login to view this page!');
+	}
+	// response.end();
+})
+
+
+// console.log("this is it: ", questionArray.toString());ß
+
+app.get('/index', (req, res) => {
+    if (req.session.loggedin) { 
+
+        res.render('index', {
+            userName: req.body.theUserName,
+            data: questionArray
+
+        })
+
+    
+    } else {
+        res.send('Please login to view this page!');
     }
-  });
 
-  res.render("scoreRead", {
-    score: score,
-    data: questionArray
-  });
-
-  score = 0;
 
   // console.log(score);
 });
 
-// console.log("this is it: ", questionArray.toString());
+});
 
-app.get("/index", (req, res) => {
-  res.render("index", {
-    data: questionArray
-  });
+
+app.get('/auth', (req, res) => {
+    if (req.session.loggedin) { 
+    
+        res.render('auth')
+
+    } else {
+        res.send('Please login to view this page!');
+    }
+
+
 });
 
 app.get("/highscore", (req, res) => {
@@ -178,47 +224,61 @@ app.post("/index", (request, response) => {
   });
 });
 
-app.get("/register", (request, response) => {
-  response.render("register");
+app.get('/', (request, response) => {
+    
+    response.render('login')
+}); 
+
+app.post('/auth', function(request, response) {
+    console.log(request.body);
+    
+    var username = request.body.theUserName;
+    console.log(username);
+    
+    var password = request.body.thePassword;
+    console.log(password);
+
+	if (username && password) {
+		db.query('SELECT * FROM users WHERE user_name = ? AND user_password = ?', [username, password], function(error, results, fields) {
+			if (results.length > 0) {
+				request.session.loggedin = true;
+				request.session.username = username;
+                response.redirect('/index'); 
+			} else {
+				response.redirect('auth') 
+			}			
+			response.end();
+		});
+	} else {
+        response.redirect('auth') 		
+		response.end();
+	}
 });
 
-app.post("/successfulSignUp", (request, response) => {
-  const userName = request.body.regUsername;
-  const password = request.body.regPassword;
-  const email = request.body.regEmail;
-  let sqlEmailCheck = "SELECT email FROM users WHERE email = ?";
-  let sqlUserNameCheck = "SELECT user_name FROM users WHERE user_name = ?";
-  let signUp =
-    "INSERT INTO users SET user_name = ?, email = ?, user_password = ?";
-  let newUser = [userName, email, password];
+// app.post('/index', (request, response) => {
+//     const userName = request.body.theUserName; 
+//     const password = request.body.thePassword;
+//     let sqlCheck = 'SELECT user_name, user_password FROM users WHERE user_name = ?';
 
-  db.query(sqlEmailCheck, email, (error, result) => {
-    if (error) {
-      console.log("[INFO] ERROR");
-      console.log(error);
-    } else if (result.length > 0) {
-      // Render "this email has been taken"
-    } else {
-      db.query(sqlUserNameCheck, userName, (error, result) => {
-        if (error) {
-          console.log("[INFO] ERROR");
-          console.log(error);
-        } else if (result.length > 0) {
-          // Render "this user name has been taken!"
-        } else {
-          db.query(signUp, newUser, (error, result) => {
-            if (error) {
-              console.log("[INFO] Error");
-            } else {
-              response.render("login", {
-                data: questionArray
-              });
-            }
-          });
-        }
-      });
-    }
-  });
+//     db.query(sqlCheck, userName, (error, result) => {
+//         if(error) {
+//             console.log('[INFO] Error')
+//             console.log(error) 
+//         } else {
+//             if(result.length < 1){
+//                response.render('errorLogin') 
+//             } else {
+//                 response.render('index', {                       
+//                     data: questionArray, 
+//                     userName: userName
+//                 }) 
+//             }
+//         }
+//     })  
+// });  
+
+app.get('/register', (request, response) => {
+    response.render('register')
 });
 
 app.listen(3001, () => {
