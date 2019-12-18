@@ -15,18 +15,18 @@
         <h1>TRIVIA GAME</h1>
         <div>
             <nav> <button id='user_name' method="GET" action='/user-page'>{{userName}}</button></nav>
-            <form id="questionForm" method="POST" action="/scoreRead">  
+            <form id="questionForm" method="POST" action="/scoreRead">
                 <ol>
                     {{#each data}}
 
-                        <div class="questionBox">
-                            <li>
-                                {{{this.question}}}
-                                {{#each this.answers}}
-                                     {{{this}}}
-                                {{/each}}
-                            </li>
-                        </div>
+                    <div class="questionBox">
+                        <li>
+                            {{{this.question}}}
+                            {{#each this.answers}}
+                            {{{this}}}
+                            {{/each}}
+                        </li>
+                    </div>
 
                     {{/each}}
 
