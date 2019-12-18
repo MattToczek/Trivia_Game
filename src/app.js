@@ -126,7 +126,89 @@ getQuiz( response => {
 
     // console.log(questionArray);
 });
+
+let temp1;
+let temp2;
+let newArray = [];
+let finished =0;
+
+
+let forLoop = (array) => {
+    finished = 0;                                  //resets counter outside of loop
+    console.log("my array length is: ",array.length);
+    console.log("array[0].score is: ",array[0]);  
+    console.log("array[1].score is:  ",array[1]);
+
     
+    
+    for (let i = 0; i < array.length; i++) {  
+        // if( i < 2) {    // loops through array and swaps adjacent values
+            if(array[i+1] != undefined && array[i].score < array[i+1].score){
+            // if(array[i].score > array[i+1].score){
+                temp1 = array[i];
+                temp2 = array[i + 1];
+                array[i] = temp2;
+                array[i + 1] = temp1;
+            // }
+            console.log("if");  
+           
+
+
+            }else{                                       // if [i] < [i +1], couner increases
+                finished++
+                if (finished == array.length) {         // if it doesn't make a change through the whole loop, the array is in order.
+                    finished = true;
+                    console.log("else");
+                }
+            }
+        // }
+     
+    }
+}
+
+
+let arraynge = (arr)=>{
+    
+    do {
+        forLoop(arr)
+    } while (finished != true);                     // loop breaks when counter reaches length of array.
+
+    return arr
+}
+
+
+
+    
+app.get('/highScores', (req, res) => {
+    
+    if (req.session.loggedin) {
+        db.query('SELECT * FROM topScores', function(error, results, fields) {
+            console.log("These are the results: ", results);
+            // console.log(results[0].score);
+            let sortedScores = results
+            // let sortedScores = results;
+            sortedScores = arraynge(sortedScores);
+
+            if (sortedScores.length>5) {
+                sortedScores = sortedScores.splice(sortedScores.length-6, 0, sortedScores.length)
+            }
+            let position = 1;
+
+            sortedScores.forEach(element => {
+                element.position = position;
+                position++;
+            })
+             
+            res.render('highScores', {
+                scores: sortedScores
+            })
+        })
+    } else {
+		res.send('Please login to view this page!');
+	}
+	// response.end();
+})
+
 
 app.get('/scoreRead', (req, res) => {
     
@@ -209,13 +291,13 @@ app.get('/', (request, response) => {
 }); 
 
 app.post('/auth', function(request, response) {
-    console.log(request.body);
+    // console.log(request.body);
     
     var username = request.body.theUserName;
-    console.log(username);
+    // console.log(username);
     
     var password = request.body.thePassword;
-    console.log(password);
+    // console.log(password);
 
 	if (username && password) {
 		db.query('SELECT * FROM users WHERE user_name = ? AND user_password = ?', [username, password], function(error, results, fields) {
