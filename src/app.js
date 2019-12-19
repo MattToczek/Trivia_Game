@@ -4,6 +4,7 @@ const session = require('express-session')
 const request = require('request');
 const path = require('path');
 const mysql = require('mysql')
+require('dotenv').config();
 
 app.use(express.static(path.join(__dirname, '../')));
 
@@ -18,11 +19,11 @@ app.use(express.json());
 app.set('view engine', 'hbs');
 
 const db = mysql.createConnection({         // info in 'session' tab
-    host:'127.0.0.1',                       // in Workbench
-    user: 'root',
-    password: 'password',
+    host:process.env.DB_HOST,                       // in Workbench
+    password: process.env.DB_PASSWORD,
+    user: process.env.DB_USER,
     port: 3306,             //mySQL port
-    database: 'scoreLog'
+    database: process.env.DB_USER
 });
 
 db.connect((err) => {
@@ -81,10 +82,10 @@ let createQAndAPairs = (data)=> {
     let answerArray = []
 
     data.results.forEach((element, num) => {
-        let correctA = `<input type="radio" value="${element.correct_answer}" class="inputBtns" name="question${num+1}"><span class="inputText correct">${element.correct_answer}</span></input>`
+        let correctA = `<input type="radio" value="${element.correct_answer}" class="inputBtns" name="question${num+1}" required><span class="inputText correct">${element.correct_answer}</span></input>`
         answerArray = element.incorrect_answers;
         answerArray.forEach((e, key) => {
-            answerArray[key] = `<input type="radio" value="${e}" class="inputBtns" name="question${num+1}"><span class="inputText">${e}</span></input>`;
+            answerArray[key] = `<input type="radio" value="${e}" class="inputBtns" name="question${num+1}" required><span class="inputText">${e}</span></input>`;
         });
 
         answerArray.push(correctA);
@@ -180,6 +181,7 @@ let arraynge = (arr)=>{
 
     
 app.get('/highscore', (req, res) => {
+
     
     if (req.session.loggedin) {
         db.query('SELECT * FROM topScores', function(error, results, fields) {
@@ -455,7 +457,10 @@ app.post('/sucessfulSignUp', (request, response) => {
     let sqlEmailCheck = 'SELECT email FROM users WHERE email = ?'; 
     let sqlUserNameCheck = 'SELECT user_name FROM users WHERE user_name = ?';
     let signUp = 'INSERT INTO users SET user_name = ?, email = ?, user_password = ?';
+    let scoreBoardAdd = 'INSERT INTO high_scores SET user_name = ?, user_id = ?, user_score = ?';
+    let getId = 'SELECT id FROM users WHERE user_name = ?';
     let newUser = [userName, email, password];
+    let scoreDetails = [];
 
     db.query(sqlEmailCheck, email, (error, result) => { 
         if(error){
@@ -475,9 +480,26 @@ app.post('/sucessfulSignUp', (request, response) => {
                         if(error){
                             console.log('[INFO] Error')
                         } else {  
-                            response.render('login', {                       
-                                data: questionArray
-                            })  
+                            db.query(getId, userName, (error, result)=>{
+                                console.log(result);
+                                
+                                if(error){
+                                    console.log('[INFO] Error: ', error)
+                                } else {  
+                                    scoreDetails = [userName, result[0].id, 0]
+                                    console.log("These are the scoreDetails: ",scoreDetails);
+                                    db.query(scoreBoardAdd, scoreDetails, (error, result)=>{
+                                        if(error){
+                                            console.log('[INFO] Error: ', error)
+                                        } else { 
+                                            response.render('login', {                       
+                                                data: questionArray
+                                            })
+                                        }
+                                    }) 
+                                }
+                            })
+                 
                         }
                     })
                 }
