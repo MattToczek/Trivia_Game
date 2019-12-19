@@ -227,23 +227,123 @@ app.get('/scoreRead', (req, res) => {
 	// response.end();
 })
 
+
 app.post('/scoreRead', (req, res) => {
     
     if (req.session.loggedin) {
         userAnswers = Object.values(req.body);
+        console.log('My answers');
+        console.log(userAnswers);
         userAnswers.forEach(element => {
             if (correctAnsArray.includes(element)) {
                 score ++
             }
         })
 
-        res.render('scoreRead', {
-            score: score,
-            data: questionArray
+        console.log("My score is", score);
 
+
+        // res.render('scoreRead', {
+        //     score: score,
+        //     data: questionArray
+
+        // })
+        
+ 
+        let username = 'melissa';
+        // WORKING SQL query
+        let hsCheck = 'SELECT user_score FROM high_scores WHERE user_name = ?';
+        // WORKING SQL Query
+        let sqlUser = 'SELECT id, user_name FROM users WHERE user_name = ?';
+        // WORKING SQL Query
+        let idUdCheck = 'SELECT user_id FROM high_scores WHERE user_name = ?'
+        // WORKING SQL Query
+        let scoreUpdate = 'UPDATE high_scores SET user_score = ? WHERE user_id = ?'
+        // WORKING SQL Query
+    let writeHs = 'INSERT INTO high_scores SET user_id = ?, user_name = ?, user_score = ?'
+        // Check if any user data already exists in the DB 
+       db.query(hsCheck, username, (error, result) => {
+            console.log( "this is the result: ", result)
+            // Error check
+            if(error){
+                console.log('[INFO] ERROR');
+                console.log(error);
+            // If the result length is greater than zero, meaning an entry in the DB for that user already exists, then the below function compares the current score and the previous score. I have saved the previous score in a variable, as result was the previously logged score, I can compare the two values. 
+            } else if(result.length > 0){
+                let prevScore = result[0].user_score; 
+                console.log("My prev score is", prevScore);
+                console.log("Last score check", score);
+                if(score > prevScore){
+                    console.log("Inside of score comparison");
+                        // If there is no errors, find the ID where the user name is equal to the current user. 
+                    db.query(idUdCheck, username, (error, result) => {
+                        // Error check
+                        if(error){
+                            console.log('[INFO] ERROR');
+                            console.log(error);
+                        } else { 
+                            // Then, providing there is no errors, I grab the previous result, which is the user ID, and I grab the new score, store them in an array so that data gets passed into SQL accordingly. The page will then render as expected.
+                            let newScore = [score, result[0].user_id]; 
+                            console.log('this is the new score for the user', newScore);
+                            db.query(scoreUpdate, newScore, (error, result) => {
+                                if(error){
+                                    console.log('[INFO] ERROR');
+                                    console.log(error);
+                                } else { 
+                                    // Else, we render the page as normal. We also get a console log to show that the update was a success. ADD? A message to congratulate the user on their high score?
+                                        console.log('[INFO] Scores updated successfully'); 
+                                    res.render('scoreRead', {
+                                        score: score,
+                                        data: questionArray
+                                    })
+                                }
+                            })
+                        
+                        }
+                    })
+                // If the new score isn't higher than previous score, render the page as normal.
+                } else {
+                    res.render('scoreRead', {
+                        score: score,
+                        data: questionArray
+                
+                    })
+                }
+            } else { 
+                // Write the score for the associated user into the high scores DB
+                // SELECT id, user_name FROM users WHERE user_name = ?(current username)
+                db.query(sqlUser, username, (error, result) => {
+                    console.log(result);
+                    
+                    if(error){
+                        console.log('[INFO] ERROR');
+                        console.log(error);
+                    } else { 
+                        // SELECT id, user_name FROM users WHERE user_name = ?(current username)
+                        // High score credentials below is the id and user name from the result, along with the current score. 
+                        let hsCredentials = [result[0].id, result[0].user_name, score]
+                        // A query is then passed to SQL which inserts the new data into the high scores table.
+                        db.query(writeHs, hsCredentials, (error, result) => {
+                            if(error){
+                                console.log('[INFO] ERROR');
+                                console.log(error);
+                            } else {
+                                console.log('[INFO] Score registered successfully'); 
+                                res.render('scoreRead', {
+                                    score: score,
+                                    data: questionArray
+                            
+                                })
+                            }
+                        })
+                    }
+                })
+            } 
         })
 
-        score=0;
+    
+
+        // score=0;
     } else {
 		res.send('Please login to view this page!');
 	}
