@@ -7,6 +7,7 @@ yarn-error.log*
 lerna-debug.log*
 
 .ds_store
+.env
 package-lock.json
 
 
