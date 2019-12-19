@@ -229,6 +229,8 @@ app.get('/scoreRead', (req, res) => {
 
 
 app.post('/scoreRead', (req, res) => {
+
+    // console.log("this is session details: ", req.session);
     
     if (req.session.loggedin) {
         userAnswers = Object.values(req.body);
@@ -250,7 +252,9 @@ app.post('/scoreRead', (req, res) => {
         // })
         
  
-        let username = 'melissa';
+        let username = req.session.username;
+        console.log(username);
+        
         // WORKING SQL query
         let hsCheck = 'SELECT user_score FROM high_scores WHERE user_name = ?';
         // WORKING SQL Query
@@ -319,9 +323,11 @@ app.post('/scoreRead', (req, res) => {
                         console.log('[INFO] ERROR');
                         console.log(error);
                     } else { 
+                        console.log("this is the result: ",result);
+                        
                         // SELECT id, user_name FROM users WHERE user_name = ?(current username)
                         // High score credentials below is the id and user name from the result, along with the current score. 
-                        let hsCredentials = [result[0].id, result[0].user_name, score]
+                        let hsCredentials = [result[0].user_id, result[0].user_name, score]
                         // A query is then passed to SQL which inserts the new data into the high scores table.
                         db.query(writeHs, hsCredentials, (error, result) => {
                             if(error){
