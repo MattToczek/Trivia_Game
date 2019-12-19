@@ -81,10 +81,10 @@ let createQAndAPairs = (data)=> {
     let answerArray = []
 
     data.results.forEach((element, num) => {
-        let correctA = `<input type="radio" value="${element.correct_answer}" class="inputBtns correct" name="question${num+1}">${element.correct_answer}</input>`
+        let correctA = `<input type="radio" value="${element.correct_answer}" class="inputBtns" name="question${num+1}"><span class="inputText correct">${element.correct_answer}</span></input>`
         answerArray = element.incorrect_answers;
         answerArray.forEach((e, key) => {
-            answerArray[key] = `<input type="radio" value="${e}" class="inputBtns" name="question${num+1}">${e}</input>`;
+            answerArray[key] = `<input type="radio" value="${e}" class="inputBtns" name="question${num+1}"><span class="inputText">${e}</span></input>`;
         });
 
         answerArray.push(correctA);
