@@ -136,9 +136,9 @@ let finished =0;
 
 let forLoop = (array) => {
     finished = 0;                                  //resets counter outside of loop
-    console.log("my array length is: ",array.length);
-    console.log("array[0].score is: ",array[0]);  
-    console.log("array[1].score is:  ",array[1]);
+    // console.log("my array length is: ",array.length);
+    // console.log("array[0].score is: ",array[0]);  
+    // console.log("array[1].score is:  ",array[1]);
 
     
     
@@ -184,11 +184,11 @@ app.get('/highscore', (req, res) => {
 
     
     if (req.session.loggedin) {
-        db.query('SELECT * FROM topScores', function(error, results, fields) {
+        db.query('SELECT * FROM high_scores', function(error, results, fields) {
             console.log("These are the results: ", results);
-            // console.log(results[0].score);
-            let sortedScores = results
-            // let sortedScores = results;
+            console.log(results[0].score);
+
+            let sortedScores = results;
             sortedScores = arraynge(sortedScores);
 
             if (sortedScores.length>5) {
