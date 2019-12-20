@@ -43,39 +43,110 @@ let correctAnsArray = [];
 let score = 0;
 let userAnswers;
 let data;
+let categories = [
+    {
+        cat:"Video Games",
+        num: 15,
+    },
+    {
+        cat: "Books",
+        num: 10,
+    },
+    {
+        cat:"Board Games",
+        num: 16,
+    },
+    {
+        cat:"Cartoon & Animations",
+        num: 32,
+    },
+    {
+        cat:"Film",
+        num:11,
+    },
+    {
+        cat:"Music",
+        num: 12,
+    },
+    {
+        cat:"Television",
+        num: 14,
+    },
+    {
+        cat: "General Knowledge",
+        num: 9,
+    },
+    {
+        cat:"History",
+        num: 23,
+    },
+    {
+        cat:"Animals",
+        num: 27,
+    },
+    {
+        cat:"Geography",
+        num: 22,
+    },
+    {
+        cat:"Art",
+        num: 25,
+    },
+    {
+        cat:"Sports",
+        num: 21,
+    },
+    {
+        cat:"Science & Nature",
+        num: 17,
+    },
+    {
+        cat:"Politics",
+        num: 24,
+    },
+    {
+        cat: "Mathematics",
+        num: 19,
+    },
+    {
+        cat: "Computers",
+        num: 18,
+    },
+    {
+        cat: "Mythology",
+        num: 20,
+    }
+    ];
+let dificulty = ["easy", "medium", "hard"];
 
 
-
-const getQuiz = (catNum = "", (callback)=>{
-
-
-    let quizURL = `https://opentdb.com/api.php?amount=10&type=multiple`;
+const getQuiz = (catNum = "", difficulty = "easy",  callback ) =>{
+    let quizURL = `https://opentdb.com/api.php?amount=10&difficulty=${difficulty}&type=multiple`;
+    if (catNum != ""){
+        quizURL = `https://opentdb.com/api.php?amount=10&category=${catNum}&difficulty=${difficulty}&type=multiple`
+    }
     // let catagorySetter = `&category=${catNum}`
-
     // if (typeof catNum == "number"){
-        
     //     quizURL = `https://opentdb.com/api.php?amount=10&type=multiple${catagorySetter}`;
-    // } 
-
+    // }
+    console.log("my callback is", callback);
     request({url: quizURL, json:true, encoding:null}, async (err, response )=> {
-        
-        if(err){
-
+        try {
+            if(response == undefined){
+                await callback({
+                    error: "Cannot find this catagory"
+                });
+            }
+            else{
+                // console.log(response);
+                await callback(response.body);
+           }
+        } catch (err) {
+            console.log(err)
             console.log("ERROR: Cannot connect to API");
-            
-        }else if(response == undefined){
-
-            await callback({
-                error: "Cannot find this catagory"
-            });
         }
-        else{
-            // console.log(response);
-            await callback(response.body);
-       }
-      
     })
-})
+}
 
 let createQAndAPairs = (data)=> {
 
@@ -115,18 +186,18 @@ const getAnswers = (data) => {
 }
 
 
-getQuiz( response => {
+// getQuiz( response => {
 
-    data = response;
+//     data = response;
 
-    console.log("this is the response: ",response); 
+//     console.log("this is the response: ",response); 
   
-    createQAndAPairs(data);
-    getAnswers(data);
+//     createQAndAPairs(data);
+//     getAnswers(data);
 
 
-    // console.log(questionArray);
-});
+//     // console.log(questionArray);
+// });
 
 let temp1;
 let temp2;
@@ -179,6 +250,12 @@ let arraynge = (arr)=>{
     return arr
 }
 
+app.get('/dashboard', (request, response) => {
+    response.render('dashboard', {
+        category: categories,
+        difficulty: dificulty,
+    })
+});
 
 
     
@@ -414,7 +491,7 @@ app.post('/auth', function(request, response) {
 			if (results.length > 0) {
 				request.session.loggedin = true;
 				request.session.username = username;
-                response.redirect('/index'); 
+                response.redirect('/dashboard'); 
 			} else {
 				response.redirect('auth') 
 			}			
@@ -451,6 +528,29 @@ app.post('/auth', function(request, response) {
 app.get('/register', (request, response) => {
     response.render('register')
 });
+
+app.post('/index', (req, res) => {
+    if (req.session.loggedin) {
+        console.log("this is category",req.body.category);
+        console.log("this is difficulty", req.body.difficulty);
+        console.log("this is body: ", req.body);
+        console.log(res);
+        getQuiz(req.body.category, req.body.difficulty, async(response) => {
+            data = response;
+            console.log('this is the response', response);
+            await createQAndAPairs(data);
+            await getAnswers(data);
+            console.log('this is', data)
+            // console.log(questionArray);
+        });
+        res.render('index', {
+            data: questionArray
+        })
+    } else {
+        res.send('Please login to view this page!');
+    }
+});
+
 
 app.post('/sucessfulSignUp', (request, response) => {
     const userName = request.body.regUsername; 

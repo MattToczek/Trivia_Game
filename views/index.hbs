@@ -15,7 +15,6 @@
     <div class="bodyWrapper">
         <h1 id="loginPageLogo">TRIVIA GAME</h1>
         <div>
-            <nav> <button id='user_name' method="GET" action='/user-page'>{{userName}}</button></nav>
             <form id="questionForm" method="POST" action='/scoreRead'>
             {{#each data}} <div class="questionBox">
                 <li>
@@ -33,7 +32,7 @@
         <button class="quizBtn" type="submit">Submit your answers!!</button>
 
         </form>
-        <a class="quizBtn" href="/highscore">See High Scores</button>
+        <a class="quizBtn" href="/highscore">See High Scores</a>
 
     </div>
     <script src="/public/app.js"></script>
