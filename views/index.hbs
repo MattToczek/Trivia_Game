@@ -16,7 +16,8 @@
         <h1 id="loginPageLogo">TRIVIA GAME</h1>
         <div>
             <nav> <button id='user_name' method="GET" action='/user-page'>{{userName}}</button></nav>
-            <form id="questionForm" {{#each data}} <div class="questionBox">
+            <form id="questionForm" method="POST" action='/scoreRead'>
+            {{#each data}} <div class="questionBox">
                 <li>
                     {{{this.question}}}
                     {{#each this.answers}}
