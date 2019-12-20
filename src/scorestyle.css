@@ -3,19 +3,22 @@
 body {
   margin: 0;
 }
+
 .question {
   justify-content: space-between;
 }
-div h1 {
-  text-align: center;
-  text-decoration: underline;
-  font-family: "Pinyon Script", cursive;
-  font-size: 300px;
-  color: goldenrod;
-}
 
-h2 {
-  text-decoration: underline;
+h1 {
+  margin: 40px 200px;
+  padding: 20px 0px; 
+  font-size: 100px;
+  font-family: 'Raleway', sans-serif;
+  text-shadow: rgb(42, 75, 88) 10px 10px 6px;
+  text-align: center;
+  color: goldenrod;
+  border: solid goldenrod;
+  box-shadow: rgb(42, 75, 88) 10px 10px 6px;
+  background-color: rgb(46, 90, 107);
 }
 
 h2 {
@@ -23,7 +26,7 @@ h2 {
   column-count: 3;
   column-gap: 30px;
   column-rule-style: solid;
-  font-family: "Pinyon Script", cursive;
+  font-family: 'Raleway', sans-serif;
   font-size: 30px;
   color: goldenrod;
 }
@@ -31,10 +34,15 @@ h2 {
   display: flex;
   justify-content: center;
 }
-/* .left,
-.right {
-  width: 33%; */
-/* } */
+
 .middle {
   width: 33%;
+}
+
+td {
+  font-size: 40px;
+  color: white;
+  font-family: 'Raleway', sans-serif;
+  text-shadow: rgb(42, 75, 88) 10px 10px 6px;
+
 }
