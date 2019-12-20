@@ -145,7 +145,7 @@ let forLoop = (array) => {
     for (let i = 0; i < array.length; i++) {  
            
         // if( i < 2) {    // loops through array and swaps adjacent values
-            if(array[i+1] != undefined && array[i].user_score > array[i+1].user_score){
+            if(array[i+1] != undefined && array[i].user_score < array[i+1].user_score){
                 console.log("if is working!");
                 
             // if(array[i].score > array[i+1].score){
@@ -168,12 +168,14 @@ let forLoop = (array) => {
 
 
 let arraynge = (arr)=>{
+    console.log("arr before =", arr);
     
     do {
         forLoop(arr)
 
     } while (finished != true);                     // loop breaks when counter reaches length of array.
-
+    console.log("array = ",arr);
+    
     return arr
 }
 
@@ -200,7 +202,7 @@ app.get('/highscore', (req, res) => {
                 element.position = position;
                 position++;
             })
-             
+                
             res.render('highscore', {
                 scores: sortedScores
             })
